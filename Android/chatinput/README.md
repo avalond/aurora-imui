@@ -9,8 +9,8 @@
 提供了以下几种方式添加依赖，只需要选择其中一种即可。
 
 - Gradle
-```
-compile 'cn.jiguang.imui:chatinput:0.1.0'
+```groovy
+compile 'cn.jiguang.imui:chatinput:0.1.1'
 ```
 
 - Maven
@@ -19,7 +19,7 @@ compile 'cn.jiguang.imui:chatinput:0.1.0'
 <dependency>
   <groupId>cn.jiguang.imui</groupId>
   <artifactId>chatinput</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -27,7 +27,7 @@ compile 'cn.jiguang.imui:chatinput:0.1.0'
 - JitPack
 > project 下的 build.gradle
 
-```
+```groovy
 allprojects {
   repositories {
     ...
@@ -39,9 +39,9 @@ allprojects {
 
 > module 的 build.gradle
 
-```
+```groovy
 dependencies {
-  compile 'com.github.jpush:imui:0.1.0'
+  compile 'com.github.jpush:imui:0.1.1'
 }
 ```
 
@@ -50,7 +50,7 @@ dependencies {
 
 #### 在 xml 布局文件中引用 ChatInputView：
 
-```
+```xml
     <cn.jiguang.imui.chatinput.ChatInputView
         android:id="@+id/chat_input"
         android:layout_width="match_parent"
@@ -63,12 +63,11 @@ dependencies {
         app:photoBtnIcon="@drawable/photo"
         app:sendBtnIcon="@drawable/send"
         app:voiceBtnIcon="@drawable/mic" />
-
 ```
 
 #### 初始化 ChatInputView
 
-```
+```java
 ChatInputView chatInputView = (ChatInputView) findViewById(R.id.chat_input);
 chatInputView.setMenuContainerHeight(softInputHeight);
 ```
@@ -82,7 +81,7 @@ ChatInputView 提供了各种按钮及事件的监听回调，所以用户可以
 
 #### OnMenuClickListener
 首先是输入框下面的菜单栏事件的监听，调用 chatInputView.setMenuClickListener 即可设置监听：
-```
+```java
 chatInput.setMenuClickListener(new OnMenuClickListener() {
     @Override
     public boolean onSendTextMessage(CharSequence input) {
@@ -115,7 +114,7 @@ chatInput.setMenuClickListener(new OnMenuClickListener() {
 #### RecordVoiceListener
 这是录音的接口，使用方式：
 
-```
+```java
 mRecordVoiceBtn = mChatInput.getRecordVoiceButton();
 mRecordVoiceBtn.setRecordVoiceListener(new RecordVoiceListener() {
     @Override
@@ -146,7 +145,7 @@ mRecordVoiceBtn.setRecordVoiceListener(new RecordVoiceListener() {
 
 #### OnCameraCallbackListener
 这是相机相关的接口，使用方式：
-```
+```java
 mChatInput.setOnCameraCallbackListener(new OnCameraCallbackListener() {
     @Override
     public void onTakePictureCompleted(String photoPath) {
@@ -161,30 +160,28 @@ mChatInput.setOnCameraCallbackListener(new OnCameraCallbackListener() {
             }
         });
     }
-                                       
+
     @Override
     public void onStartVideoRecord() {
-                                       
+
     }
-                                       
+
     @Override
     public void onFinishVideoRecord(String videoPath) {
         // 请注意，点击发送视频的事件会回调给 onSendFiles，这个是在录制完视频后触发的                               
     }
-                                       
+
     @Override
     public void onCancelVideoRecord() {
-                                       
+
     }
 });
 ```
 
-
 #### 设置拍照后保存的文件
 setCameraCaptureFile(String path, String fileName)
 
-```
+```java
 // 参数分别是路径及文件名，建议在上面的 onCameraClick 触发时调用
 mChatInput.setCameraCaptureFile(path, fileName);
-
 ```

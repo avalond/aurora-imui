@@ -9,7 +9,7 @@
 - Gradle
 
 ```groovy
-compile 'cn.jiguang.imui:imui:0.1.0'
+compile 'cn.jiguang.imui:imui:0.1.1'
 ```
 
 - Maven
@@ -17,7 +17,7 @@ compile 'cn.jiguang.imui:imui:0.1.0'
 <dependency>
   <groupId>cn.jiguang.imui</groupId>
   <artifactId>imui</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -34,7 +34,7 @@ allprojects {
 
 // module/build.gradle
 dependencies {
-  compile 'com.github.jpush:imui:0.1.0'
+  compile 'com.github.jpush:imui:0.1.1'
 }
 ```
 
@@ -42,7 +42,7 @@ dependencies {
 使用消息列表只需几个简单的步骤，可以参考一下 [demo](./../sample)。
 
 ### 1. 在布局文件中引用 MessageList：
-```
+```xml
 <cn.jiguang.imui.messages.MessageList
     android:id="@+id/msg_list"
     android:layout_width="match_parent"
@@ -192,7 +192,7 @@ adapter.addToStart(message, true);
 
 - *addToEnd(List<IMessage> messages)*
 ```java
-// 在消息列表的顶部加入消息
+// 在消息列表的顶部加入消息，消息列表应当按日期增序存放。
 adapter.addToEnd(messages);
 ```
 

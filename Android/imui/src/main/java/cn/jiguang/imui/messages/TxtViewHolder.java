@@ -2,21 +2,21 @@ package cn.jiguang.imui.messages;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.jiguang.imui.BuildConfig;
 import cn.jiguang.imui.R;
 import cn.jiguang.imui.commons.models.IMessage;
-import cn.jiguang.imui.view.CircleImageView;
 
-public class TxtViewHolder<MESSAGE extends IMessage>
-        extends BaseMessageViewHolder<MESSAGE>
+public class TxtViewHolder<MESSAGE extends IMessage> extends BaseMessageViewHolder<MESSAGE>
         implements MsgListAdapter.DefaultMessageViewHolder {
 
     protected TextView mMsgTv;
     protected TextView mDateTv;
     protected TextView mDisplayNameTv;
-    protected CircleImageView mAvatarIv;
+    protected ImageView mAvatarIv;
+
     protected boolean mIsSender;
 
     public TxtViewHolder(View itemView, boolean isSender) {
@@ -24,7 +24,7 @@ public class TxtViewHolder<MESSAGE extends IMessage>
         this.mIsSender = isSender;
         mMsgTv = (TextView) itemView.findViewById(R.id.aurora_tv_msgitem_message);
         mDateTv = (TextView) itemView.findViewById(R.id.aurora_tv_msgitem_date);
-        mAvatarIv = (CircleImageView) itemView.findViewById(R.id.aurora_iv_msgitem_avatar);
+        mAvatarIv = (ImageView) itemView.findViewById(R.id.aurora_iv_msgitem_avatar);
         mDisplayNameTv = (TextView) itemView.findViewById(R.id.aurora_tv_msgitem_display_name);
     }
 
@@ -34,13 +34,9 @@ public class TxtViewHolder<MESSAGE extends IMessage>
         if (message.getTimeString() != null) {
             mDateTv.setText(message.getTimeString());
         }
-        boolean isAvatarExists = message.getFromUser().getAvatarFilePath() != null
-                && !message.getFromUser().getAvatarFilePath().isEmpty();
-        if (isAvatarExists && mImageLoader != null) {
-            mImageLoader.loadImage(mAvatarIv, message.getFromUser().getAvatarFilePath());
-        } else if (mImageLoader == null) {
-            mAvatarIv.setVisibility(View.GONE);
-        }
+
+        mImageLoader.loadAvatarImage(mAvatarIv, message.getFromUser().getAvatarFilePath());
+
         if (!mIsSender) {
             if (mDisplayNameTv.getVisibility() == View.VISIBLE) {
                 mDisplayNameTv.setText(message.getFromUser().getDisplayName());
@@ -116,8 +112,7 @@ public class TxtViewHolder<MESSAGE extends IMessage>
         return mMsgTv;
     }
 
-    public CircleImageView getAvatar() {
+    public ImageView getAvatar() {
         return mAvatarIv;
     }
-
 }

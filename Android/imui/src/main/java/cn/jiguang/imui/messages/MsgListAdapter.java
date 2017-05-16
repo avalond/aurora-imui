@@ -1,7 +1,9 @@
 package cn.jiguang.imui.messages;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -51,7 +53,9 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
     private HoldersConfig mHolders;
     private OnLoadMoreListener mListener;
 
+    @NonNull
     private ImageLoader mImageLoader;
+
     private boolean mIsSelectedMode;
     private OnMsgClickListener<MESSAGE> mMsgClickListener;
     private OnMsgLongClickListener<MESSAGE> mMsgLongClickListener;
@@ -60,6 +64,7 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
     private int mSelectedItemCount;
     private RecyclerView.LayoutManager mLayoutManager;
     private MessageListStyle mStyle;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     private List<Wrapper> mItems;
 
@@ -67,7 +72,7 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
         this(senderId, new HoldersConfig(), imageLoader);
     }
 
-    public MsgListAdapter(String senderId, HoldersConfig holders, ImageLoader imageLoader) {
+    public MsgListAdapter(String senderId, HoldersConfig holders, @NonNull ImageLoader imageLoader) {
         mSenderId = senderId;
         mHolders = holders;
         mImageLoader = imageLoader;
@@ -158,6 +163,7 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
             ((BaseMessageViewHolder) holder).mMsgLongClickListener = this.mMsgLongClickListener;
             ((BaseMessageViewHolder) holder).mMsgClickListener = this.mMsgClickListener;
             ((BaseMessageViewHolder) holder).mAvatarClickListener = this.mAvatarClickListener;
+            ((BaseMessageViewHolder) holder).mMediaPlayer = this.mMediaPlayer;
         }
         holder.onBind(wrapper.item);
     }
@@ -194,11 +200,11 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
     /**
      * Add messages chronologically, to load last page of messages from history, use this method.
      *
-     * @param messages Last page of messages.
+     * @param messages Last page of messages. Should be ordered by date.
      */
     public void addToEnd(List<MESSAGE> messages) {
         int oldSize = mItems.size();
-        for (int i = 0; i < messages.size(); i++) {
+        for (int i = messages.size() - 1; i >= 0; i--) {
             MESSAGE message = messages.get(i);
             mItems.add(new Wrapper<>(message));
         }
@@ -770,5 +776,17 @@ public class MsgListAdapter<MESSAGE extends IMessage> extends RecyclerView.Adapt
         public DefaultVideoViewHolder(View itemView, boolean isSender) {
             super(itemView, isSender);
         }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        ViewHolderController.getInstance().remove(holder.getAdapterPosition());
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        ViewHolderController.getInstance().release();
     }
 }

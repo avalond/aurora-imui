@@ -122,7 +122,8 @@ public class ChatInputView extends LinearLayout
 
     private int mWidth;
     private int mHeight;
-    private int mMenuHeight = 300;
+    public static int sMenuHeight = 800;
+
     private boolean mShowSoftInput = false;
 
     private long mRecordTime;
@@ -246,6 +247,7 @@ public class ChatInputView extends LinearLayout
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN && !mShowSoftInput) {
                     mShowSoftInput = true;
                     invisibleMenuLayout();
+                    mChatInput.requestFocus();
                 }
                 return false;
             }
@@ -341,7 +343,7 @@ public class ChatInputView extends LinearLayout
                 if (onSubmit()) {
                     mChatInput.setText("");
                 }
-                if (mSelectPhotoView.getSelectFiles().size() > 0) {
+                if (mSelectPhotoView.getSelectFiles() != null && mSelectPhotoView.getSelectFiles().size() > 0) {
                     mListener.onSendFiles(mSelectPhotoView.getSelectFiles());
 
                     mSendBtn.setImageDrawable(ContextCompat.getDrawable(getContext(),
@@ -742,8 +744,9 @@ public class ChatInputView extends LinearLayout
         mFullScreenBtn.setVisibility(VISIBLE);
         mChatInputContainer.setVisibility(VISIBLE);
         mMenuItemContainer.setVisibility(VISIBLE);
-        setMenuContainerHeight(mMenuHeight);
-        ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mMenuHeight);
+        setMenuContainerHeight(sMenuHeight);
+        ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, sMenuHeight);
         mTextureView.setLayoutParams(params);
         mRecordVideoBtn.setBackgroundResource(R.drawable.aurora_preview_record_video);
         mRecordVideoBtn.setVisibility(VISIBLE);
@@ -788,7 +791,7 @@ public class ChatInputView extends LinearLayout
     public void dismissCameraLayout() {
         mCameraFl.setVisibility(GONE);
         ViewGroup.LayoutParams params =
-                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mMenuHeight);
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, sMenuHeight);
         mTextureView.setLayoutParams(params);
     }
 
@@ -799,7 +802,7 @@ public class ChatInputView extends LinearLayout
      */
     public void setMenuContainerHeight(int height) {
         if (height > 0) {
-            mMenuHeight = height;
+            sMenuHeight = height;
             mMenuContainer.setLayoutParams(
                     new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
         }
@@ -1037,7 +1040,7 @@ public class ChatInputView extends LinearLayout
         dismissMenuLayout();
         mChatInput.requestFocus();
         ViewGroup.LayoutParams params =
-                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mMenuHeight);
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, sMenuHeight);
         mTextureView.setLayoutParams(params);
     }
 
@@ -1054,7 +1057,7 @@ public class ChatInputView extends LinearLayout
         if (mImm != null) {
             mImm.hideSoftInputFromWindow(mChatInput.getWindowToken(), 0);
         }
-        setMenuContainerHeight(mMenuHeight);
+        setMenuContainerHeight(sMenuHeight);
         mShowSoftInput = false;
     }
 
